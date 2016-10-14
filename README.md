@@ -1,11 +1,15 @@
 # todo-app
 Web app for to do list
 
-## Version 2 - _coming soon_
+## Version 3 - _coming soon_
 __Version requirements:__
-* It should have a button to toggle completed tasks
-* It should have a button to toggle all completed tasks
-* It should have a button and a field to change current tasks
+* Toggle completed button should be next to every task
+
+## Version 2
+__Added functionality:__
+* Toggle completed tasks
+* Toggle all completed tasks at once
+* Change current tasks
 
 ## Version 1
 __Functionality:__
