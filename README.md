@@ -3,7 +3,7 @@ Web app for to do list
 
 ## Version 2 - _coming soon_
 __Version requirements:__
-* 
+* It should have a button to toggle completed tasks
 
 ## Version 1
 __Functionality:__
