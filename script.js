@@ -1,15 +1,3 @@
-// it should have a toggle completed button
-	// a field to select position
-
-// it should have a toggle completed all button
-	// if at least one completed toggle all completed
-
-// it should have a function to change todo
-	// button to change todo
-	// field to select position 
-	// field to make a change
-
-
 // add button should work with enter
 
 
@@ -21,9 +9,39 @@ var todoList = {
 			completed: false
 		});
 	},
+	changeTodo: function(position, todoText) {
+		this.todos[position].todoText = todoText;
+	},
 	deleteTodo: function(position) {
 		this.todos.splice(position, 1);
 	},
+	toggleCompleted: function(position) {
+		var todo = this.todos[position];
+		todo.completed = !todo.completed;
+	},
+	toggleAll: function() {
+		var totalTodos = this.todos.length;
+		var completedTodos = 0;
+
+		// Get a number of completed todos
+		for (var i = 0; i < totalTodos; i++) {
+			if (this.todos[i].completed === true) {
+				completedTodos++;
+			}
+		}
+
+		// If everything is true, make everything false
+		if (completedTodos === totalTodos) {
+			for (var i = 0; i < totalTodos; i++) {
+				this.todos[i].completed = false;
+			}
+		// Else make everything true
+		} else {
+			for (var i = 0; i < totalTodos; i++) {
+				this.todos[i].completed = true;
+			}
+		}
+	}
 };
 
 var handlers = {
@@ -37,6 +55,23 @@ var handlers = {
 		todoList.deleteTodo(position);
 		view.displayTodos();
 	},
+	toggleCompleted: function() {
+		var positionInput = document.getElementById("toggleCompletedPositionInput");
+		todoList.toggleCompleted(positionInput.valueAsNumber);
+		view.displayTodos();
+	},
+	toggleAll: function() {
+		todoList.toggleAll();
+		view.displayTodos();
+	},
+	changeTodo: function () {
+		var changeTodoPositionInput = document.getElementById("changeTodoPositionInput");
+		var changeTodoTextInput = document.getElementById("changeTodoTextInput");
+		todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
+		changeTodoPositionInput.value = "";
+		changeTodoTextInput.value = "";
+		view.displayTodos();
+	}
 };
 
 var view = {
@@ -46,7 +81,12 @@ var view = {
 
 		for (var i = 0; i < todoList.todos.length; i++) {
 			var newLi = document.createElement("li");
-			newLi.textContent = todoList.todos[i].todoText;
+			if (todoList.todos[i].completed === false ) {
+				newLi.textContent = "( ) " + todoList.todos[i].todoText; 
+			} else {
+				newLi.textContent = "(x) " + todoList.todos[i].todoText; 
+			}
+
 			newLi.id = [i];
 			newLi.appendChild( this.createDeleteButton() );
 			todosUl.appendChild(newLi);
