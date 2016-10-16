@@ -1,6 +1,3 @@
-// add button should work with enter
-
-
 var todoList = {
 	todos: [],
 	addTodo: function(addTodoText) {
@@ -24,23 +21,21 @@ var todoList = {
 		var completedTodos = 0;
 
 		// Get a number of completed todos
-		for (var i = 0; i < totalTodos; i++) {
-			if (this.todos[i].completed === true) {
+		this.todos.forEach(function(todo) {
+			if (todo.completed === true) {
 				completedTodos++;
 			}
-		}
+		});
 
-		// If everything is true, make everything false
-		if (completedTodos === totalTodos) {
-			for (var i = 0; i < totalTodos; i++) {
-				this.todos[i].completed = false;
+		this.todos.forEach(function(todo) {
+			// If everything is true, make everything false
+			if (completedTodos === totalTodos) {
+				todo.completed = false;
+			// Otherwise, make everything true
+			} else {
+				todo.completed = true;
 			}
-		// Else make everything true
-		} else {
-			for (var i = 0; i < totalTodos; i++) {
-				this.todos[i].completed = true;
-			}
-		}
+		});
 	}
 };
 
@@ -55,9 +50,8 @@ var handlers = {
 		todoList.deleteTodo(position);
 		view.displayTodos();
 	},
-	toggleCompleted: function() {
-		var positionInput = document.getElementById("toggleCompletedPositionInput");
-		todoList.toggleCompleted(positionInput.valueAsNumber);
+	toggleCompleted: function(position) {
+		todoList.toggleCompleted(position);
 		view.displayTodos();
 	},
 	toggleAll: function() {
@@ -79,24 +73,35 @@ var view = {
 		var todosUl = document.querySelector("ul");
 		todosUl.innerHTML = "";
 
-		for (var i = 0; i < todoList.todos.length; i++) {
+		todoList.todos.forEach(function(todo, position) {
 			var newLi = document.createElement("li");
-			if (todoList.todos[i].completed === false ) {
-				newLi.textContent = "( ) " + todoList.todos[i].todoText; 
+			// newLi.textContent = todo.todoText;
+			if (todo.completed === true ) {
+				newLi.textContent = "(x) " + todo.todoText;
+				newLi.className = "completed";
 			} else {
-				newLi.textContent = "(x) " + todoList.todos[i].todoText; 
+				newLi.textContent = "( ) " + todo.todoText;
+				// newLi.className = "";
+
 			}
 
-			newLi.id = [i];
+			newLi.id = position;
+			newLi.insertBefore( this.createToggleButton(), newLi.childNodes[0] );
 			newLi.appendChild( this.createDeleteButton() );
 			todosUl.appendChild(newLi);
-		}
+		}, this);
 	},
 	createDeleteButton: function() {
 		var deleteButton = document.createElement("button");
 		deleteButton.textContent = "Delete";
 		deleteButton.className = "deleteButton";
 		return deleteButton;
+	},
+	createToggleButton: function() {
+		var toggleButton = document.createElement("button");
+		toggleButton.textContent = "Toggle Completed";
+		toggleButton.className = "toggleButton";
+		return toggleButton;
 	},
 	setUpEventListeners: function() {
 		var todosUl = document.querySelector("ul");
@@ -108,6 +113,19 @@ var view = {
       		// Check if elementClicked is a delete button
 			if (elementClicked.className === "deleteButton") {
 				handlers.deleteTodo( parseInt(elementClicked.parentNode.id) );
+			// Check if elementClicked is a toggle button
+			} else if (elementClicked.className === "toggleButton") {
+				handlers.toggleCompleted( parseInt(elementClicked.parentNode.id) );
+				// var clickedLi = document.getElementById(elementClicked.parentNode.id);
+
+				// clickedLi.classList.toggle("completed");
+			}
+		});
+
+		// Trigger Add button with Enter
+		window.addEventListener( "keypress", function(event) {
+			if (event.keyCode === 13) {
+				handlers.addTodo();
 			}
 		});
 	},

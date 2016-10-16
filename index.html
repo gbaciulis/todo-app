@@ -3,6 +3,11 @@
   <head>
     <title>Todo App</title>
   </head>
+<!--   <style type="text/css">
+    .completed {
+      background-color: red;
+    }
+  </style> -->
   <body>
     <h1>Todo List</h1>
 
@@ -11,7 +16,7 @@
     </div>
     
     <div>
-      <button onclick="handlers.addTodo()">Add</button>
+      <button onclick="handlers.addTodo()" id="addButton">Add</button>
       <input id="addTodoTextInput" type="text">
     </div>
     
@@ -19,11 +24,6 @@
       <button onclick="handlers.changeTodo()">Change Todo</button>
       <input id="changeTodoPositionInput" type="number">
       <input id="changeTodoTextInput" type="text">
-    </div>
-    
-    <div>
-      <button onclick="handlers.toggleCompleted()">Toggle Completed</button>
-      <input id="toggleCompletedPositionInput" type="number">
     </div>
     
     <ul>
