@@ -58,12 +58,8 @@ var handlers = {
 		todoList.toggleAll();
 		view.displayTodos();
 	},
-	changeTodo: function () {
-		var changeTodoPositionInput = document.getElementById("changeTodoPositionInput");
-		var changeTodoTextInput = document.getElementById("changeTodoTextInput");
-		todoList.changeTodo(changeTodoPositionInput.valueAsNumber, changeTodoTextInput.value);
-		changeTodoPositionInput.value = "";
-		changeTodoTextInput.value = "";
+	changeTodo: function (position, todoText ) {
+		todoList.changeTodo(position, todoText);
 		view.displayTodos();
 	}
 };
@@ -75,59 +71,103 @@ var view = {
 
 		todoList.todos.forEach(function(todo, position) {
 			var newLi = document.createElement("li");
+			newLi.className = "";
+			newLi.id = position;
+			
 			// newLi.textContent = todo.todoText;
+
 			if (todo.completed === true ) {
-				newLi.textContent = "(x) " + todo.todoText;
 				newLi.className = "completed";
 			} else {
-				newLi.textContent = "( ) " + todo.todoText;
-				// newLi.className = "";
-
+				newLi.className = "";
 			}
 
-			newLi.id = position;
-			newLi.insertBefore( this.createToggleButton(), newLi.childNodes[0] );
-			newLi.appendChild( this.createDeleteButton() );
+			// Create a div where checkbox, label and deleteButton will be added
+			var newDiv = document.createElement("div");
+			newDiv.className = "view"; 
+
+			var newLabel = document.createElement("label");
+			newLabel.className = "todoText";
+			newLabel.textContent = todo.todoText;
+
+			newDiv.insertBefore( this.createToggleCheckBox(), newDiv.childNodes[0] );
+			newDiv.appendChild(newLabel);
+			newDiv.appendChild( this.createDeleteButton() );
+
+			newLi.appendChild(newDiv);
 			todosUl.appendChild(newLi);
 		}, this);
 	},
 	createDeleteButton: function() {
 		var deleteButton = document.createElement("button");
-		deleteButton.textContent = "Delete";
+		deleteButton.textContent = "x";
 		deleteButton.className = "deleteButton";
 		return deleteButton;
 	},
-	createToggleButton: function() {
-		var toggleButton = document.createElement("button");
-		toggleButton.textContent = "Toggle Completed";
-		toggleButton.className = "toggleButton";
-		return toggleButton;
+	createToggleCheckBox: function() {
+		var toggleCheckBox = document.createElement("input");
+		toggleCheckBox.type = "checkbox";
+		toggleCheckBox.className = "toggleCheckBox";
+		return toggleCheckBox;
 	},
 	setUpEventListeners: function() {
 		var todosUl = document.querySelector("ul");
 
-		todosUl.addEventListener( "click", function(event) {
+		todosUl.addEventListener("click", function(e) {
 			// Get the element that was clicked on
-      		var elementClicked = event.target;
-
+      		var elementClicked = e.target;
+      		var liClicked = parseInt(elementClicked.parentNode.parentNode.id);
       		// Check if elementClicked is a delete button
 			if (elementClicked.className === "deleteButton") {
-				handlers.deleteTodo( parseInt(elementClicked.parentNode.id) );
+				handlers.deleteTodo(liClicked);
 			// Check if elementClicked is a toggle button
-			} else if (elementClicked.className === "toggleButton") {
-				handlers.toggleCompleted( parseInt(elementClicked.parentNode.id) );
-				// var clickedLi = document.getElementById(elementClicked.parentNode.id);
-
-				// clickedLi.classList.toggle("completed");
+			} else if (elementClicked.className === "toggleCheckBox") {
+				handlers.toggleCompleted(liClicked);
 			}
 		});
 
 		// Trigger Add button with Enter
-		window.addEventListener( "keypress", function(event) {
-			if (event.keyCode === 13) {
+		var addTodoTextInput = document.getElementById("addTodoTextInput");
+		addTodoTextInput.addEventListener("keypress", function(e) {
+			if (e.keyCode === 13) {
 				handlers.addTodo();
 			}
 		});
+
+		// Event listener for editing todo
+		todosUl.addEventListener("dblclick", function(e) {
+			// Get the element that was clicked on
+      		var elementClicked = e.target;
+      		var liClicked = parseInt(elementClicked.parentNode.parentNode.id);
+      		// Add class name to li
+      		document.getElementById(liClicked).className += " editing";
+      		// Check if elementClicked is a label
+			if (elementClicked.className === "todoText") {
+				var editInput = document.createElement("input");
+				editInput.className = "edit";
+				editInput.value = todoList.todos[liClicked].todoText;
+
+				clickedLiElement = document.getElementById(liClicked);
+				clickedLiElement.appendChild(editInput);
+				editInput.focus();
+
+				editInput.addEventListener("keypress", function(e) {
+					if (e.keyCode === 13) {
+						handlers.changeTodo(liClicked, editInput.value);
+					}
+				});
+
+				// editInput.addEventListener("click", function(e) {
+				// 	if (elementClicked.className !== "edit") {
+				// 		handlers.changeTodo(liClicked, editInput.value);
+				// 	}
+				// 	// e.stopPropagation();
+				// });
+			}
+
+			
+		});
+
 	},
 };
 

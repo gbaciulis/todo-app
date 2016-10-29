@@ -1,33 +1,30 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Todo App</title>
-  </head>
-<!--   <style type="text/css">
-    .completed {
-      background-color: red;
-    }
-  </style> -->
-  <body>
-    <h1>Todo List</h1>
+	<head>
+		<title>Todo App</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
 
-    <div>
-      <button onclick="handlers.toggleAll()">Toggle All</button>
-    </div>
-    
-    <div>
-      <button onclick="handlers.addTodo()" id="addButton">Add</button>
-      <input id="addTodoTextInput" type="text">
-    </div>
-    
-    <div>
-      <button onclick="handlers.changeTodo()">Change Todo</button>
-      <input id="changeTodoPositionInput" type="number">
-      <input id="changeTodoTextInput" type="text">
-    </div>
-    
-    <ul>
-    </ul>
-    <script src="script.js"></script>
-  </body>
+	<body>
+		<h1>todos</h1>
+
+		<section class="todoapp">
+			<header>
+				<input id="addTodoTextInput" type="text" placeholder="What needs to be done?">
+			</header>
+			
+	 		<main>
+
+				<button class="toggleAll" onclick="handlers.toggleAll()">></button>
+				<ul class="todolist">
+				</ul>
+	 		</main>
+
+	 		<footer>
+	 			<p>Double click to edit</p>
+	 		</footer>
+	 	</section>
+
+		<script src="script.js"></script>
+	</body>
 </html>

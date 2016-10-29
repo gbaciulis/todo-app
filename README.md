@@ -1,12 +1,15 @@
 # todo-app
-Web app for to do list
+Web app for todo list
 
-## Version 4 - _coming soon_
-__Version requirements:__
-* It should edit a task by double clicking on it
+## Version 4
+__What's new:__
+* New UI
+* Task is edited by double clicking on it
+* Removed add button for better UI (tasks added with Enter key)
+* Enter key now works only on active input field
 
 ## Version 3
-__Improvements:__
+__What's new:__
 * Toggle completed button shows up next to every task
 * Add button is triggered by Enter
 
